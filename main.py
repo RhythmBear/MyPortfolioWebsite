@@ -140,5 +140,10 @@ def edit():
                            resume_form=resume)
 
 
+@app.route('/portfolio-details')
+def show_port():
+    return render_template('port-details.html')
+
+
 if __name__ == "__main__":
     app.run(debug=True)
