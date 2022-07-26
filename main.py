@@ -26,8 +26,26 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
+# Create Login Manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def login_manager(user_id):
+    return User.query.get(int(user_id))
 # -------------------------TABLES---------------------------------------- #
+
+
 # Section for the about section i.e tables and forms
+
+# Creating a simple table that will be used for the User
+class User(UserMixin, db.Model):
+    __tablename__ = 'User'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(250), unique=True)
+    password = db.Column(db.String(25), nullable=False)
 
 
 class Skills(db.Model):
@@ -64,6 +82,17 @@ class Resume(db.Model):
     category = db.Column(db.String, nullable=False, unique=False)
 
 
+# Function
+def add_new_user(username, password):
+    hashed_password = generate_password_hash(password=password,
+                                             method='pbkdf2:sha256',
+                                             salt_length=8)
+
+    new_user = User(username=username,
+                    password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+
 # ------------------------------- ROUTES ----------------------------------------------- #
 db.create_all()
 
@@ -77,10 +106,42 @@ def home():
                            resume=all_resume_items)
 
 
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    login_form = LoginForm()
+    if request.method == "POST" and login_form.validate_on_submit():
+        print(login_form.data)
+
+        user_exists = User.query.filter_by(username=login_form.username.data).first()
+        print(user_exists)
+        if user_exists:
+            user_password = user_exists.password
+            password_correct = check_password_hash(pwhash=user_password,
+                                                   password=login_form.password.data)
+
+            if password_correct:
+                login_user(user_exists)
+
+                flash(message="Login Successful", category="login success")
+                return redirect(url_for('edit'))
+            else:
+                flash(message="Invalid Details", category="wrong password")
+
+        else:
+            flash(message="Invalid User, Check details and Try again", category='wrong username')
+
+    return render_template('login.html', login_form=login_form)
+
+
 # This is commented out becasue it was only needed to create the database
+
 @app.route('/edit', methods=["GET", "POST"])
+@login_required
 def edit():
     new_skill_form = SkillForm()
+
+    if not current_user.is_authenticated:
+        return redirect('/login')
 
     # Check if the skill form is being called or Submitted
     if request.method == "POST" and new_skill_form.validate_on_submit():
@@ -138,6 +199,15 @@ def edit():
     return render_template('edit.html',
                            skillform=new_skill_form,
                            resume_form=resume)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash(message="Succesfully logged out", category='logout')
+
+    return redirect(url_for('login'))
 
 
 @app.route('/portfolio-details')

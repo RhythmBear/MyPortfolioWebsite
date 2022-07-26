@@ -21,6 +21,7 @@
 
 
     <link href="static/assets/css/style.css" rel="stylesheet">
+    <link href="static/assets/css/edit_styles.css" rel="stylesheet">
 
 {% endblock %}
 {% block body %}
@@ -34,6 +35,15 @@
       <a href="index.html" class="mr-auto"><img src="static/assets/img/logo.png" alt="" class="img-fluid"></a>
 
         <h2>Edit Portfolio Details</h2>
+<!--        FLASH MESSAGE FOR LOGIN SUCCESS-->
+
+        {% with messages = get_flashed_messages(category_filter=['login success']) %}
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <p class="success">{{ msg }}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
       <nav id="navbar" class="navbar">
         <ul>
@@ -41,6 +51,7 @@
           <li><a class="nav-link " href="#about">Skills</a></li>
 <!--            -->
           <li><a class="nav-link" href="#resume">Resume</a></li>
+            <li><a class="nav-link" href="{{ url_for('logout')}}">Logout</a></li>
 <!--          <li><a class="nav-link" href="#services">Services</a></li>-->
 <!--          <li><a class="nav-link" href="#portfolio">Portfolio</a></li>-->
 <!--          <li><a class="nav-link" href="#contact">Contact</a></li>-->
@@ -98,7 +109,6 @@
 
 
 
-
 <!-- Vendor JS Files -->
   <script src="static/assets/vendor/purecounter/purecounter.js"></script>
   <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -110,5 +120,8 @@
 
   <!-- Template Main JS File -->
   <script src="static/assets/js/main.js"></script>
+
+
+
 
 {% endblock %}

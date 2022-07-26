@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField, SelectField, TextAreaField, DateField
+from wtforms import StringField, SubmitField, IntegerField, SelectField, TextAreaField, DateField, PasswordField
 from wtforms.validators import DataRequired, URL, NumberRange
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,7 +8,17 @@ from sqlalchemy import Table, Column, Integer, ForeignKey
 from datetime import datetime as dt
 from main import db
 
+
 # ---------------------------- Creating Forms ----------------------- #
+class LoginForm(FlaskForm):
+    # Creating the form for the Loggin in
+    username = StringField('Your Username', validators=[DataRequired()],
+                           render_kw={'style': 'margin : 10px 0 20px'})
+    password = PasswordField('Your Password', validators=[DataRequired()],
+                             render_kw={'style': 'margin : 10px 0 20px'})
+    submit = SubmitField('Login')
+
+
 class SkillForm(FlaskForm):
     # Creating a form for editing and adding new skills
     skill = StringField('Add a New skill', validators=[DataRequired()],
