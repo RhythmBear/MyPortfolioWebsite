@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
+from wtforms.fields.html5 import EmailField
 from wtforms import StringField, SubmitField, IntegerField, SelectField, TextAreaField, DateField, PasswordField
-from wtforms.validators import DataRequired, URL, NumberRange
+from wtforms.validators import DataRequired, URL, NumberRange, Email
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -71,3 +72,10 @@ class ResumeForm(FlaskForm):
                        validators=[NumberRange(min=1990, max=dt.now().year)],
                        render_kw={'style': 'margin : 10px 0 20px'})
     submit = SubmitField('Add Resume')
+
+
+class ContactForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    email = EmailField('Email', validators=[DataRequired()])
+    subject = StringField('Subject', validators=[DataRequired()])
+    message = TextAreaField('Message', validators=[DataRequired()])

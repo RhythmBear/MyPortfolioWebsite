@@ -1,10 +1,12 @@
 from flask import Flask, render_template, redirect, url_for, flash, request
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, SkillForm, ServiceForms, ResumeForm
+from app.forms import LoginForm, SkillForm, ServiceForms, ResumeForm, ContactForm
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from app import app, db
 from app.models import *
+from app.tasks import send_email
+import os
 
 
 
@@ -29,13 +31,17 @@ def login_manager(user_id):
 db.create_all()
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
     all_skills = Skills.query.all()
     all_resume_items = Resume.query.all()
+    contact_form = ContactForm()
+
+
     return render_template("index.html",
                            skills=all_skills,
-                           resume=all_resume_items)
+                           resume=all_resume_items,
+                           form=contact_form)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -140,6 +146,33 @@ def logout():
     flash(message="Succesfully logged out", category='logout')
 
     return redirect(url_for('login'))
+
+
+@app.route('/submit_form', methods=['POST'])
+def submit_form():
+    name = request.form['name']
+    email = request.form['email']
+    subject = request.form['subject']
+    message = request.form['message']
+
+    print(name, email, subject, message)
+    print(os.environ.get("MY_EMAIL"))
+    
+    
+    email_response = send_email(sender_name=name,
+                                sender_email=os.environ.get("MY_EMAIL"), 
+                                sender_password=os.environ.get("EMAIL_PASSWORD"),
+                                recipient_email="femiemmanuel1990@gmail.com",
+                                visitor_email=email,
+                                subject=subject,
+                                body=message)
+    # Check to see if the email was succesfully sent and return a response
+    if email_response:
+        return 'OK'
+    else: 
+        return 'Failed'
+    # Do something with the form data here (e.g., store it in a database)
+    
 
 
 @app.route('/portfolio-details')

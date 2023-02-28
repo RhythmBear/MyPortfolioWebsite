@@ -41,3 +41,5 @@ class Resume(db.Model):
     end_year = db.Column(db.Integer, nullable=True, unique=False)
     organization = db.Column(db.String, nullable=True, unique=True)
     category = db.Column(db.String, nullable=False, unique=False)
+
+
