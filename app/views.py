@@ -1,13 +1,14 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, Response,  render_template, redirect, url_for, flash, request, send_from_directory
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, SkillForm, ServiceForms, ResumeForm, ContactForm
+from app.forms import LoginForm, SkillForm, ResumeForm, ContactForm, ProjectForm
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
-from app import app, db
+from app import app, db, secure_filename
 from app.models import *
-from app.tasks import send_email
+from app.tasks import send_email, allowed_file
+from PIL import Image
+from config import Config
 import os
-
 
 
 # Create Login Manager
@@ -35,12 +36,15 @@ db.create_all()
 def home():
     all_skills = Skills.query.all()
     all_resume_items = Resume.query.all()
+    all_projects = Project.query.all()
     contact_form = ContactForm()
-
+    filters = ['Web App', 'Cloud', 'Script', 'API']
 
     return render_template("index.html",
                            skills=all_skills,
                            resume=all_resume_items,
+                           projects=all_projects,
+                           project_filters=filters,
                            form=contact_form)
 
 
@@ -110,7 +114,7 @@ def edit():
             flash(message=f"Successfully Added {new_skill_form.skill.data}", category="skill_success")
             return redirect('/edit')
 
-    # Resume Form
+    #-------------------------------------- Resume Form ----------------------------------------------------------
     resume = ResumeForm()
 
     # Check if the Resume Form has been filled has is been submitted and Collect the
@@ -133,10 +137,63 @@ def edit():
         flash("Successfully Added new Resume Item", category='resume')
 
         return redirect('/edit')
+    
+    # ---------------------------------------- PORTFOLIO / PROJECTS ----------------------------------------------
+    # Section for adding a new project to the website
+    projects = ProjectForm()
 
+    if request.method == "POST" and projects.validate_on_submit():
+        print(projects.data.values())
+        pic = request.files['image']
+        new_filename = projects.title.data.replace(' ', '_') + '.' + pic.filename.split('.')[-1]
+        new_project = Project(title=projects.title.data,
+                              category=projects.category.data,
+                              client=projects.client.data,
+                              start_date=projects.start_date.data,
+                              end_date=projects.end_date.data,
+                              url=projects.url.data,
+                              description=projects.description.data,
+                              image=new_filename)
+
+        # new_photo = photos.save(projects.images.data)
+        if 'image' not in request.files:
+            flash('No file part')
+            print("NO IMAGEEE")
+            return redirect('/edit')
+        
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if pic.filename == '':
+            flash('No selected file')
+            print("No image at alllll")
+            return redirect(request.url)
+
+        
+        # If Image was Uploaded
+        # Rename the filename to match the name of the project
+        
+        if pic and allowed_file(pic.filename):
+            print("Found Image")
+            filename = secure_filename(pic.filename)
+            pic.save(os.path.join(Config.UPLOAD_FOLDER, filename))
+            os.rename(f'images/{filename}', f'images/{new_filename}')
+            filename = new_filename
+
+            db.session.add(new_project)
+            db.session.commit()
+        
+            return redirect(url_for('download_file', name=filename))
+    
+        return redirect('/edit#portfolio')
+    else: 
+        photo_url = None
+
+    
     return render_template('edit.html',
                            skillform=new_skill_form,
-                           resume_form=resume)
+                           resume_form=resume,
+                           project_form=projects,
+                           photo_url=photo_url)
 
 
 @app.route("/logout")
@@ -175,6 +232,14 @@ def submit_form():
     
 
 
-@app.route('/portfolio-details')
-def show_port():
-    return render_template('port-details.html')
+@app.route('/portfolio-details/<project_name>')
+def show_port(project_name):
+    project = Project.query.filter_by(title=project_name).first()
+    return render_template('port-details.html', project=project)
+
+
+@app.route('/uploads/<name>')
+def download_file(name):
+    return send_from_directory(Config.DOWNLOAD_FOLDER, 
+                               name, 
+                               ), 200

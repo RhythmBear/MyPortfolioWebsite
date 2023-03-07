@@ -43,3 +43,20 @@ class Resume(db.Model):
     category = db.Column(db.String, nullable=False, unique=False)
 
 
+class Project(db.Model):
+    """
+    Projects Table for the Portfolio Section in the Website
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(255), nullable=False)
+    client = db.Column(db.String(255), nullable=False)
+    start_date = db.Column(db.DateTime, nullable=False)
+    end_date = db.Column(db.DateTime, nullable=False)
+    url = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return '<Project {}>'.format(self.title)
+    
