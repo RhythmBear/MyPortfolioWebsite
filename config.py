@@ -16,6 +16,10 @@ class Config:
     DEBUG = False
     TESTING = False
     WTF_CSRF_ENABLED = True
+    UPLOAD_EXTENSIONS = ['.jpg', '.png', '.gif']
+    MAX_CONTENT_LENGTH = 16 * 1000 * 1000
+    UPLOAD_FOLDER = os.path.join(basedir, "images")
+    DOWNLOAD_FOLDER = os.path.join(basedir, "images")
 
     # Settings applicable to all environments
     SECRET_KEY = os.getenv('SECRET_KEY')
