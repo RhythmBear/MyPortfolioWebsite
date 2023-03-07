@@ -232,7 +232,7 @@ def submit_form():
     
 
 
-@app.route('/portfolio-details/<project_name>')
+@app.route('/projects/<project_name>')
 def show_port(project_name):
     project = Project.query.filter_by(title=project_name).first()
     return render_template('port-details.html', project=project)

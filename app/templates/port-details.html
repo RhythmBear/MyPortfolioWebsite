@@ -10,22 +10,22 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="static/assets/img/favicon.png" rel="icon">
-  <link href="static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="{{ url_for('static', filename='assets/img/favicon.png') }}" rel="icon">
+  <link href="{{ url_for('static', filename='assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="static/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="static/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="static/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="static/assets/css/style.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Personal - v4.7.0
@@ -52,15 +52,15 @@
               <div class="swiper-wrapper align-items-center">
 
                 <div class="swiper-slide">
-                  <img src="static/assets/img/portfolio/portfolio-details-1.jpg" alt="">
+                  <img src="{{ url_for('static', filename='assets/img/portfolio/portfolio-details-1.jpg') }}" alt="">
                 </div>
 
                 <div class="swiper-slide">
-                  <img src="static/assets/img/portfolio/portfolio-details-2.jpg" alt="">
+                  <img src="{{ url_for('static', filename='assets/img/portfolio/portfolio-details-2.jpg') }}" alt="">
                 </div>
 
                 <div class="swiper-slide">
-                  <img src="static/assets/img/portfolio/portfolio-details-3.jpg" alt="">
+                  <img src="{{ url_for('static', filename='assets/img/portfolio/portfolio-details-3.jpg') }}" alt="">
                 </div>
 
               </div>
@@ -74,7 +74,7 @@
             <ul>
               <li><strong>Category</strong>: {{ project.category }}</li>
               <li><strong>Client</strong>: {{ project.client }}</li>
-              <li><strong>Project date</strong>: {{ project.closing_date }}</li>
+              <li><strong>Project date</strong>: {{ project.end_date.strftime("%d %B, %Y") }}</li>
               <li><strong>Project URL</strong>: <a href="{{ project.url }}">{{ project.url }}</a></li>
             </ul>
 
@@ -99,16 +99,16 @@
   </div>
 
   <!-- Vendor JS Files -->
-  <script src="static/assets/vendor/purecounter/purecounter.js"></script>
-  <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="static/assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="static/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="static/assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="static/assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="static/assets/vendor/php-email-form/validate.js"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/purecounter/purecounter.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/waypoints/noframework.waypoints.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/php-email-form/validate.js') }}"></script>
 
   <!-- Template Main JS File -->
-  <script src="static/assets/js/main.js"></script>
+  <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
 
 </body>
 
