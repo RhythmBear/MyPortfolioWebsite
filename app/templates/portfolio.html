@@ -11,44 +11,53 @@
       <div class="row">
         <div class="col-lg-12 d-flex justify-content-center">
           <ul id="portfolio-flters">
+
+
             <li data-filter="*" class="filter-active">All</li>
-            <li data-filter=".filter-app">Software</li>
-            <li data-filter=".filter-card">Data</li>
-            <li data-filter=".filter-web">Web</li>
+            {% for filter in project_filters %}
+            <li data-filter=".filter-{{ filter }}">{{filter}}</li>
+            {% endfor %}
+            
+            <!-- <li data-filter=".filter-data">Data</li>
+            <li data-filter=".filter-api">API</li> -->
           </ul>
         </div>
       </div>
 
       <div class="row portfolio-container">
 
-        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+        {% for project in projects %}
+        <div class="col-lg-4 col-md-6 portfolio-item filter-{{project.category}}">
           <div class="portfolio-wrap">
-            <img src="static/assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
+            <img src="{{ url_for('download_file', name=project.image)}}" class="img-fluid" alt="">
             <div class="portfolio-info">
-              <h4>App 1</h4>
-              <p>App</p>
+              <h4>{{ project.title }}</h4>
+              <p>{{ project.category }}</p>
               <div class="portfolio-links">
-                <a href="static/assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
-                <a href="{{ url_for('show_port') }}" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+                <a href="{{ url_for('download_file', name=project.image)}}" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+                <a href="{{ url_for('show_port', project_name=project.title) }}" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="Portfolio Details"><i class="bx bx-link"></i></a>
               </div>
             </div>
           </div>
         </div>
 
+        {% endfor %}
 
-<!--        <div class="col-lg-4 col-md-6 portfolio-item filter-web">-->
-<!--          <div class="portfolio-wrap">-->
-<!--            <img src="static/assets/img/portfolio/portfolio-2.jpg" class="img-fluid" alt="">-->
-<!--            <div class="portfolio-info">-->
-<!--              <h4>Web 3</h4>-->
-<!--              <p>Web</p>-->
-<!--              <div class="portfolio-links">-->
-<!--                <a href="static/assets/img/portfolio/portfolio-2.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 3"><i class="bx bx-plus"></i></a>-->
-<!--                <a href="port-details.html" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="Portfolio Details"><i class="bx bx-link"></i></a>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
+        <!-- {% for project in projects %} -->
+       <!-- <div class="col-lg-4 col-md-6 portfolio-item filter-api">
+         <div class="portfolio-wrap">
+           <img src="static/assets/img/portfolio/portfolio-2.jpg" class="img-fluid" alt="">
+           <div class="portfolio-info">
+             <h4>Web 3</h4>
+             <p>Web</p>
+             <div class="portfolio-links">
+               <a href="static/assets/img/portfolio/portfolio-2.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 3"><i class="bx bx-plus"></i></a>
+               <a href="{{ url_for('show_port', project_name=project.title) }}" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+             </div>
+           </div>
+         </div>
+       </div> -->
+       <!-- {% endfor %} -->
 
 <!--        <div class="col-lg-4 col-md-6 portfolio-item filter-app">-->
 <!--          <div class="portfolio-wrap">-->

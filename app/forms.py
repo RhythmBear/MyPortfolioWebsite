@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms.fields.html5 import EmailField
-from wtforms import StringField, SubmitField, IntegerField, SelectField, TextAreaField, DateField, PasswordField
-from wtforms.validators import DataRequired, URL, NumberRange, Email
+from wtforms.fields.html5 import EmailField, DateField
+from wtforms import StringField, SubmitField, IntegerField, SelectField, TextAreaField, PasswordField, FileField
+from wtforms.validators import DataRequired, URL, NumberRange
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -79,3 +79,34 @@ class ContactForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired()])
     subject = StringField('Subject', validators=[DataRequired()])
     message = TextAreaField('Message', validators=[DataRequired()])
+
+
+class ProjectForm(FlaskForm):
+    title = StringField('Title', 
+                        validators=[DataRequired()],
+                        render_kw={'placeholder': "What is the Title of Your Project",
+                                   'style': 'margin : 10px 0 20px'})
+    category = SelectField('Category',
+                           choices=['Web App', 'Cloud', 'Script', 'API'], 
+                           validators=[DataRequired()],
+                           render_kw={'style': 'margin : 10px 0 20px'}) 
+    client = StringField("Client", 
+                         render_kw={'placeholder': "Who hired You?",
+                                    'style': 'margin : 10px 0 20px'})
+    start_date = DateField('Start Date', format='%Y-%m-%d', 
+                     validators=[DataRequired()],
+                     render_kw={'style': 'margin : 10px 0 20px'})
+    end_date = DateField('End Date', format='%Y-%m-%d', 
+                     validators=[DataRequired()],
+                     render_kw={'style': 'margin : 10px 0 20px'})
+    url = StringField('URL', 
+                        validators=[DataRequired(), URL()],
+                        render_kw={'placeholder': "Where is the Project Hosted?",
+                                   'style': 'margin : 10px 0 20px'})
+    description = TextAreaField('Desciption',
+                            validators=[DataRequired()],
+                            render_kw={'style': 'margin : 10px 0 20px',
+                                       'placeholder': "Tell us a bit about your Project"})
+    image = FileField(u'image')
+    
+    submit = SubmitField('Add Project', render_kw={'style': 'margin : 10px 0 20px'})
