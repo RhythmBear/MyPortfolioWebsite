@@ -24,7 +24,6 @@ def login_manager(user_id):
 
 
 # Section for the about section i.e tables and forms
-
 # Creating a simple table that will be used for the User
 
 
@@ -114,7 +113,7 @@ def edit():
             flash(message=f"Successfully Added {new_skill_form.skill.data}", category="skill_success")
             return redirect('/edit')
 
-    #-------------------------------------- Resume Form ----------------------------------------------------------
+    # -------------------------------------- Resume Form ----------------------------------------------------------
     resume = ResumeForm()
 
     # Check if the Resume Form has been filled has is been submitted and Collect the
@@ -168,7 +167,6 @@ def edit():
             print("No image at alllll")
             return redirect(request.url)
 
-        
         # If Image was Uploaded
         # Rename the filename to match the name of the project
         
@@ -187,7 +185,6 @@ def edit():
         return redirect('/edit#portfolio')
     else: 
         photo_url = None
-
     
     return render_template('edit.html',
                            skillform=new_skill_form,
@@ -229,7 +226,6 @@ def submit_form():
     else: 
         return 'Failed'
     # Do something with the form data here (e.g., store it in a database)
-    
 
 
 @app.route('/projects/<project_name>')
@@ -240,6 +236,7 @@ def show_port(project_name):
 
 @app.route('/uploads/<name>')
 def download_file(name):
+    print(name)
     return send_from_directory(Config.DOWNLOAD_FOLDER, 
                                name, 
                                ), 200

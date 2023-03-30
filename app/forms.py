@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms.fields.html5 import EmailField, DateField
 from wtforms import StringField, SubmitField, IntegerField, SelectField, TextAreaField, PasswordField, FileField
-from wtforms.validators import DataRequired, URL, NumberRange
+from wtforms.validators import DataRequired, URL, NumberRange, Length
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Table, Column, Integer, ForeignKey
 from datetime import datetime as dt
-from app import db
+from flask_mde import MdeField
 
 
 # ---------------------------- Creating Forms ----------------------- #
@@ -103,10 +103,15 @@ class ProjectForm(FlaskForm):
                         validators=[DataRequired(), URL()],
                         render_kw={'placeholder': "Where is the Project Hosted?",
                                    'style': 'margin : 10px 0 20px'})
-    description = TextAreaField('Desciption',
-                            validators=[DataRequired()],
-                            render_kw={'style': 'margin : 10px 0 20px',
-                                       'placeholder': "Tell us a bit about your Project"})
-    image = FileField(u'image')
+    # description = TextAreaField('Desciption',
+    #                         validators=[DataRequired()],
+    #                         render_kw={'style': 'margin : 10px 0 20px',
+    #                                    'placeholder': "Tell us a bit about your Project"})
+    description = MdeField(validators=[
+            DataRequired("Input required"),
+            Length(min=15, max=30000)])
+    image = FileField(u'image', validators=[DataRequired()],
+                            render_kw={'style': 'margin : 10px 0 20px'
+                                       })
     
     submit = SubmitField('Add Project', render_kw={'style': 'margin : 10px 0 20px'})

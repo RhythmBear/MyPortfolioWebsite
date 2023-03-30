@@ -29,7 +29,7 @@
         {% for project in projects %}
         <div class="col-lg-4 col-md-6 portfolio-item filter-{{project.category}}">
           <div class="portfolio-wrap">
-            <img src="{{ url_for('download_file', name=project.image)}}" class="img-fluid" alt="">
+            <img src="{{ url_for('download_file', name=project.image)}}" class="img-thumbnail" height="100" alt="">
             <div class="portfolio-info">
               <h4>{{ project.title }}</h4>
               <p>{{ project.category }}</p>

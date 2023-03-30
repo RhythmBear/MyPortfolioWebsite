@@ -26,6 +26,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
+  {{mde.css}}
 
   <!-- =======================================================
   * Template Name: Personal - v4.7.0
@@ -52,16 +53,16 @@
               <div class="swiper-wrapper align-items-center">
 
                 <div class="swiper-slide">
-                  <img src="{{ url_for('static', filename='assets/img/portfolio/portfolio-details-1.jpg') }}" alt="">
+                  <img src="{{ url_for('download_file', name=project.image) }}" alt="">
                 </div>
 
-                <div class="swiper-slide">
+                <!-- <div class="swiper-slide">
                   <img src="{{ url_for('static', filename='assets/img/portfolio/portfolio-details-2.jpg') }}" alt="">
                 </div>
 
                 <div class="swiper-slide">
                   <img src="{{ url_for('static', filename='assets/img/portfolio/portfolio-details-3.jpg') }}" alt="">
-                </div>
+                </div> -->
 
               </div>
               <div class="swiper-pagination"></div>
@@ -78,9 +79,12 @@
               <li><strong>Project URL</strong>: <a href="{{ project.url }}">{{ project.url }}</a></li>
             </ul>
 
-            <p>
-              {{ project.description }}
+            <p >
+
+                 {{ project.description | markdown }}
+
             </p>
+
           </div>
 
         </div>
@@ -110,6 +114,7 @@
   <!-- Template Main JS File -->
   <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
 
+{{mde.js}}
 </body>
 
 </html>
