@@ -5,7 +5,7 @@ from app.forms import LoginForm, SkillForm, ResumeForm, ContactForm, ProjectForm
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from app import app, db, secure_filename
 from app.models import *
-from app.tasks import send_email, allowed_file
+from app.tasks import send_email, allowed_file, get_lines_of_code
 from PIL import Image
 from config import Config
 import os
@@ -39,12 +39,20 @@ def home():
     contact_form = ContactForm()
     filters = ['Web App', 'Cloud', 'Script', 'API']
 
+    status, lines = get_lines_of_code()
+
+    if status:
+        code_lines = lines
+    else:
+        code_lines = 897223
+
     return render_template("index.html",
                            skills=all_skills,
                            resume=all_resume_items,
                            projects=all_projects,
                            project_filters=filters,
-                           form=contact_form)
+                           form=contact_form,
+                           lines=code_lines), 200
 
 
 @app.route('/login', methods=["GET", "POST"])

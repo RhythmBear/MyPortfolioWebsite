@@ -6,6 +6,20 @@ from smtplib import SMTPAuthenticationError
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from app import ALLOWED_EXTENSIONS
+import requests
+from requests.exceptions import ConnectionError, ConnectTimeout
+
+
+def get_lines_of_code():
+    try:
+        response = requests.get("https://github-loc-api.onrender.com/Rhythmbear")
+    except ConnectionError or ConnectTimeout:
+        return False, 0
+    else:
+        if response.json()['response'] == 200:
+            return True, response.json()['Total lines']
+        else:
+            return False, 0
 
 
 def add_new_user(username, password):
