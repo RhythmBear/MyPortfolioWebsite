@@ -17,18 +17,14 @@ def get_lines_of_code():
         return False, 0
     else:
         if response.json()['response'] == 200:
-            return True, response.json()['Total lines']
+            return True, response.json()['data']['Total lines']
         else:
             return False, 0
 
 
 def add_new_user(username, password):
-    hashed_password = generate_password_hash(password=password,
-                                             method='pbkdf2:sha256',
-                                             salt_length=8)
-
-    new_user = User(username=username,
-                    password=hashed_password)
+    new_user = User(username=username.title())
+    new_user.hash_password(password)
     db.session.add(new_user)
     db.session.commit()
 

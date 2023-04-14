@@ -39,12 +39,14 @@ def home():
     contact_form = ContactForm()
     filters = ['Web App', 'Cloud', 'Script', 'API']
 
-    status, lines = get_lines_of_code()
 
-    if status:
-        code_lines = lines
-    else:
-        code_lines = 897223
+    # status, lines = get_lines_of_code()
+    #
+    # if status:
+    #     code_lines = lines
+    # else:
+    #     code_lines = 897223
+    code_lines = 897223
 
     return render_template("index.html",
                            skills=all_skills,
@@ -64,20 +66,17 @@ def login():
         user_exists = User.query.filter_by(username=login_form.username.data).first()
         print(user_exists)
         if user_exists:
-            user_password = user_exists.password
-            password_correct = check_password_hash(pwhash=user_password,
-                                                   password=login_form.password.data)
-
-            if password_correct:
+            print(user_exists.verify_password(login_form.password.data))
+            if user_exists.verify_password(login_form.password.data):
                 login_user(user_exists)
 
                 flash(message="Login Successful", category="login success")
                 return redirect(url_for('edit'))
             else:
-                flash(message="Invalid Details", category="wrong password")
+                flash(message="Incorrect Password, Try again!", category="wrong password")
 
         else:
-            flash(message="Invalid User, Check details and Try again", category='wrong username')
+            flash(message="User does not exist! Check details and Try again", category='wrong username')
 
     return render_template('login.html', login_form=login_form)
 
@@ -201,6 +200,23 @@ def edit():
                            photo_url=photo_url)
 
 
+@app.route('/skill/<skill_name>', methods=['GET', 'POST'])
+@login_required
+def edit_skill(skill_name):
+    skill = Skills.query.filter_by(skill=skill_name).first()
+    skill_form = SkillForm(skill=skill.skill,
+                           level=skill.level)
+
+    if request.method == 'POST' and skill_form.validate_on_submit():
+        skill.skill = skill_form.skill.data
+        skill.level = skill_form.level.data
+        db.session.commit()
+
+        return redirect('/')
+
+    return render_template('editskills.html', skills_form=skill_form)
+
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -219,7 +235,6 @@ def submit_form():
 
     print(name, email, subject, message)
     print(os.environ.get("MY_EMAIL"))
-    
     
     email_response = send_email(sender_name=name,
                                 sender_email=os.environ.get("MY_EMAIL"), 
