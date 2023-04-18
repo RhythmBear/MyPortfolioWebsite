@@ -93,25 +93,24 @@ class ProjectForm(FlaskForm):
     client = StringField("Client", 
                          render_kw={'placeholder': "Who hired You?",
                                     'style': 'margin : 10px 0 20px'})
-    start_date = DateField('Start Date', format='%Y-%m-%d', 
-                     validators=[DataRequired()],
-                     render_kw={'style': 'margin : 10px 0 20px'})
-    end_date = DateField('End Date', format='%Y-%m-%d', 
-                     validators=[DataRequired()],
-                     render_kw={'style': 'margin : 10px 0 20px'})
+    start_date = DateField('Start Date',
+                           format='%Y-%m-%d',
+                           validators=[DataRequired()],
+                           render_kw={'style': 'margin : 10px 0 20px'})
+    end_date = DateField('End Date',
+                         format='%Y-%m-%d',
+                         validators=[DataRequired()],
+                         render_kw={'style': 'margin : 10px 0 20px'})
     url = StringField('URL', 
-                        validators=[DataRequired(), URL()],
-                        render_kw={'placeholder': "Where is the Project Hosted?",
+                      validators=[DataRequired(), URL()],
+                      render_kw={'placeholder': "Where is the Project Hosted?",
                                    'style': 'margin : 10px 0 20px'})
-    # description = TextAreaField('Desciption',
-    #                         validators=[DataRequired()],
-    #                         render_kw={'style': 'margin : 10px 0 20px',
-    #                                    'placeholder': "Tell us a bit about your Project"})
+
     description = MdeField(validators=[
             DataRequired("Input required"),
             Length(min=15, max=30000)])
     image = FileField(u'image', validators=[DataRequired()],
-                            render_kw={'style': 'margin : 10px 0 20px'
+                      render_kw={'style': 'margin : 10px 0 20px'
                                        })
     
     submit = SubmitField('Add Project', render_kw={'style': 'margin : 10px 0 20px'})

@@ -212,9 +212,85 @@ def edit_skill(skill_name):
         skill.level = skill_form.level.data
         db.session.commit()
 
-        return redirect('/')
+        return redirect('/#about')
 
-    return render_template('editskills.html', skills_form=skill_form)
+    return render_template('editskills.html',
+                           edit_form=skill_form,
+                           item=skill.skill)
+
+
+@app.route('/resume/<resume_title>', methods=['GET', 'POST'])
+@login_required
+def edit_resume(resume_title):
+    resume = Resume.query.filter_by(title=resume_title).first()
+    resume_form = ResumeForm(category=resume.category,
+                             title=resume.title,
+                             details=resume.details,
+                             start_m=resume.start_month,
+                             start=resume.start_year,
+                             end_m=resume.end_month,
+                             end=resume.end_year,
+                             organization=resume.organization)
+
+    # When form is submitted edit the required details
+    if request.method == 'POST' and resume_form.validate_on_submit():
+        resume.category = resume_form.category.data
+        resume.title = resume_form.title.data
+        resume.details = resume_form.details.data
+        resume.start_month = resume_form.start_m.data
+        resume.start_year = resume_form.start.data
+        resume.end_m = resume_form.end_m.data
+        resume.end_year = resume_form.end.data
+        resume.organization = resume_form.organization.data
+
+        # commit changes to database
+        db.session.commit()
+
+        return redirect('/#resume')
+
+    return render_template('editskills.html',
+                           edit_form=resume_form,
+                           item=resume.title)
+
+
+@app.route('/edit_portfolio/<portfolio>', methods=['POST', 'GET'])
+@login_required
+def edit_portfolio(portfolio):
+    portfolio_edit = Project.query.filter_by(title=portfolio).first()
+    portfolio_form = ProjectForm(title=portfolio_edit.title,
+                                 category=portfolio_edit.category,
+                                 client=portfolio_edit.client,
+                                 start_date=portfolio_edit.start_date,
+                                 end_date=portfolio_edit.end_date,
+                                 url=portfolio_edit.url,
+                                 description=portfolio_edit.description
+                                 )
+
+    if request.method == 'POST' and portfolio_form.validate_on_submit():
+        portfolio_edit.title = portfolio_form.title.data
+        portfolio_edit.category = portfolio_form.category.data
+        portfolio_edit.client = portfolio_form.client.data
+        portfolio_edit.start_date = portfolio_form.start_date.data
+        portfolio_edit.end_date = portfolio_form.end_date.data
+        portfolio_edit.url = portfolio_form.url.data
+
+        db.session.commit()
+
+        return redirect('/#portfolio')
+
+    return render_template('editskills.html',
+                           edit_form=portfolio_form,
+                           item=portfolio_edit.title)
+
+
+@app.route('/delete_skill/<skill>', methods=['GET'])
+@login_required
+def delete_skill(skill):
+    skill_to_delete = Skills.query.filter_by(skill=skill).first()
+    db.session.delete(skill_to_delete)
+    db.session.commit()
+
+    return redirect('/#about')
 
 
 @app.route("/logout")

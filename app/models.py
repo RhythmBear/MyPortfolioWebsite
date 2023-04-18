@@ -64,7 +64,7 @@ class Project(db.Model):
     end_date = db.Column(db.DateTime, nullable=False)
     url = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    image = db.Column(db.String(255), nullable=False)
+    image = db.Column(db.String(255))
 
     def __repr__(self):
         return '<Project {}>'.format(self.title)
