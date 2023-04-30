@@ -39,12 +39,7 @@
 
 
               </div>
-              {% if current_user.is_authenticated %}
-              <div class="portfolio-links mt-5">
-                <a href="{{ url_for('edit_portfolio', portfolio=project.title)}}"  ><i class="bx bx-edit"></i></a>
-                  <a href="{{ url_for('delete_project', project=project.title)}}"  ><i class="bx bx-trash"></i></a>
-              </div>
-              {% endif %}
+
             </div>
           </div>
         </div>
