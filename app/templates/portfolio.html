@@ -34,17 +34,17 @@
               <h4>{{ project.title }}</h4>
               <p>{{ project.category }}</p>
               <div class="portfolio-links">
-                <a href="{{ url_for('download_file', name=project.image)}}" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
-                <a href="{{ url_for('edit_portfolio', portfolio=project.title)}}"  ><i class="bx bx-edit"></i></a>
                 <a href="{{ url_for('show_port', project_name=project.title) }}" target="_blank" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="Portfolio Details"><i class="bx bx-link"></i></a>
 
 
 
               </div>
-
-              <div class="portfolio-links">
+              {% if current_user.is_authenticated %}
+              <div class="portfolio-links mt-5">
+                <a href="{{ url_for('edit_portfolio', portfolio=project.title)}}"  ><i class="bx bx-edit"></i></a>
                   <a href="{{ url_for('delete_project', project=project.title)}}"  ><i class="bx bx-trash"></i></a>
               </div>
+              {% endif %}
             </div>
           </div>
         </div>
