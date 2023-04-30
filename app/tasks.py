@@ -1,3 +1,5 @@
+import os
+
 from app import db
 from werkzeug.security import generate_password_hash
 from app.models import User
@@ -57,6 +59,45 @@ def send_email(sender_name, sender_email, visitor_email, sender_password, recipi
             text = message.as_string()
             session.sendmail(sender_email, recipient_email, text)
             
+    except TimeoutError or SMTPAuthenticationError:
+        print("failed to send email.")
+
+        return False
+    else:
+        print(f"Letter successfully delivered to {recipient_email}")
+        return True
+
+
+def send_login_email(code):
+    recipient_email = os.getenv('USER_EMAIL')
+    sender_email = os.getenv('MY_EMAIL')
+    sender_password = os.getenv('EMAIL_PASSWORD')
+
+    print(f"preparing to send email to {recipient_email}")
+    message = MIMEMultipart()
+    message['From'] = f"Your Portfolio Website"
+    message['To'] = os.getenv("USER_EMAIL")
+    message['Subject'] = f"Your Login Code"
+
+    full_message = f"""
+    Use This Six Digit Code to Login into your website.
+    {code}
+    """
+    # add body to message
+    message.attach(MIMEText(full_message, 'plain'))
+
+    # create SMTP session
+    try:
+        with smtplib.SMTP('smtp.gmail.com', 587) as session:
+            session.starttls()
+
+            # login to account
+            session.login(sender_email, sender_password)
+
+            # send mail
+            text = message.as_string()
+            session.sendmail(sender_email, recipient_email, text)
+
     except TimeoutError or SMTPAuthenticationError:
         print("failed to send email.")
 

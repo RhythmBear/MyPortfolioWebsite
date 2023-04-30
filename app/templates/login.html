@@ -41,7 +41,7 @@
     <div class="row justify-content-center login-row">
       <div class="col-6 col-lg-4 col-6">
         <h2>
-          LOGIN <br>
+          Welcome Back! <br>
           <hr>
         </h2>
 <!--        FlASH MESSAGES -->
@@ -55,6 +55,10 @@
 
         <div class="login_form">
         {{ wtf.quick_form(login_form, button_map={'submit': 'btn-lg btn-info'}) }}
+
+        <span class="col-lg-6">
+               <button type="button" class="btn btn-dark mt-3"><a href="">Register User</a> </button>
+            </span>
         </div>
       </div>
 

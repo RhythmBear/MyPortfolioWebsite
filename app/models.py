@@ -1,7 +1,8 @@
 from app import db
+from itsdangerous.url_safe import URLSafeSerializer as Ser
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import Table, Column, Integer, ForeignKey
 from flask_login import UserMixin
+import os
 
 
 class User(UserMixin, db.Model):
@@ -16,6 +17,21 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)
+
+    def get_reset_token(self):
+        s = Ser(os.getenv('SECRET_KEY'))
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Ser(os.getenv('SECRET_KEY'))
+        try:
+            user_id = s.loads(token)['user_id']
+
+        except:
+            return None
+
+        return User.query.get(user_id)
 
 
 class Skills(db.Model):
@@ -68,4 +84,16 @@ class Project(db.Model):
 
     def __repr__(self):
         return '<Project {}>'.format(self.title)
-    
+
+
+class About(db.Model):
+    """ This contains the Information on the about page"""
+    title = db.Column(db.String(255), nullable=False, primary_key=True)
+    description = db.Column(db.Text, nullable=False)
+    birthday = db.Column(db.DateTime, nullable=False)
+    Email = db.Column(db.String(255), nullable=False)
+    freelance = db.Column(db.String, nullable=False)
+    city = db.Column(db.String(255), nullable=False)
+    country = db.Column(db.String(255), nullable=False)
+    resume = db.Column(db.Text, nullable=False)
+    resume_title = db.Column(db.Text, nullable=False)

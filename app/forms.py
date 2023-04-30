@@ -9,14 +9,39 @@ from sqlalchemy import Table, Column, Integer, ForeignKey
 from datetime import datetime as dt
 from flask_mde import MdeField
 
+cities = ['Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno', 'Cross River', 'Delta',
+          'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi',
+          'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto',
+          'Taraba', 'Yobe', 'Zamfara', 'Federal Capital Territory (FCT)']
+
 
 # ---------------------------- Creating Forms ----------------------- #
 class LoginForm(FlaskForm):
     # Creating the form for the Loggin in
+    username = StringField('Username', validators=[DataRequired()],
+                           render_kw={'style': 'margin : 10px 0 20px'})
+    password = PasswordField('Password', validators=[DataRequired()],
+                             render_kw={'style': 'margin : 10px 0 20px'})
+    submit = SubmitField('Login')
+
+
+class LoginCodeForm(FlaskForm):
+    code = IntegerField('Enter The Six Digit Code sent to your mail', validators=[DataRequired()],
+                        render_kw={'style': 'margin : 10px 0 20px'})
+    submit = SubmitField('Login',
+                         render_kw={'style': 'margin : 10px 0 20px'})
+
+
+class RegisterForm(FlaskForm):
+    # Creating the form for the Logginge in
+    email = EmailField('Email', validators=[DataRequired()])
     username = StringField('Your Username', validators=[DataRequired()],
                            render_kw={'style': 'margin : 10px 0 20px'})
-    password = PasswordField('Your Password', validators=[DataRequired()],
+    password = PasswordField('Password', validators=[DataRequired()],
                              render_kw={'style': 'margin : 10px 0 20px'})
+    password_2 = PasswordField('Re-enter Password', validators=[DataRequired()],
+                             render_kw={'style': 'margin : 10px 0 20px'})
+
     submit = SubmitField('Login')
 
 
@@ -38,6 +63,8 @@ class ServiceForms(FlaskForm):
     sub_title = StringField('Description of this Service',
                             validators=[DataRequired()],
                             render_kw={'style': 'margin : 10px 0 20px'})
+    submit = SubmitField('Add New Service',
+                         render_kw={'style': 'margin : 10px 0 20px'})
 
 
 class ResumeForm(FlaskForm):
@@ -109,8 +136,41 @@ class ProjectForm(FlaskForm):
     description = MdeField(validators=[
             DataRequired("Input required"),
             Length(min=15, max=30000)])
-    image = FileField(u'image', validators=[DataRequired()],
+    image = FileField(u'image',
                       render_kw={'style': 'margin : 10px 0 20px'
                                        })
     
     submit = SubmitField('Add Project', render_kw={'style': 'margin : 10px 0 20px'})
+
+
+class AboutForm(FlaskForm):
+    title = StringField('Your Title', validators=[DataRequired()],
+                        render_kw={'placeholder': "Who are you",
+                        'style': 'margin : 10px 0 20px'})
+
+    description = TextAreaField('About', validators=[DataRequired()],
+                              render_kw={'placeholder': "Talk about your self. Separate Paragraphs with |",
+                              'style': 'margin : 10px 0 20px'})
+
+    birthday = DateField('Birthday', validators=[DataRequired()],
+                         render_kw={'style': 'margin : 10px 0 20px'})
+    email = EmailField('Email', validators=[DataRequired()],
+                       render_kw={'placeholder': "Your Email address",
+                                  'style': 'margin : 10px 0 20px'}
+                       )
+    freelance = SelectField('Freelance', choices=['Available', 'Not Available'],
+                            render_kw={'style': 'margin : 10px 0 20px'}
+                            )
+    city = SelectField('City', choices=cities, validators=[DataRequired()],
+                       render_kw={'style': 'margin : 10px 0 20px'})
+    country = StringField('Country', validators=[DataRequired()],
+                          render_kw={'style': 'margin : 10px 0 20px'})
+    resume_summary = TextAreaField('A quick summary about yourself', validators=[DataRequired()],
+                                   render_kw={'placeholder': "Summarize your experience working in this role.",
+                                           'style': 'margin : 10px 0 20px'})
+    resume_title = StringField('Your Title', validators=[DataRequired()],
+                                   render_kw={'placeholder': "For Example, Backend Engineer",
+                                              'style': 'margin : 10px 0 20px'})
+
+    submit = SubmitField('Update Details', render_kw={'style': 'margin : 10px 0 20px'})
+

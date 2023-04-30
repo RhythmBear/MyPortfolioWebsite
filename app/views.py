@@ -1,15 +1,14 @@
-from flask import Flask, Response,  render_template, redirect, url_for, flash, request, send_from_directory
+from flask import Flask, Response, render_template, redirect, url_for, flash, request, send_from_directory
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, SkillForm, ResumeForm, ContactForm, ProjectForm
+from app.forms import LoginForm, SkillForm, ResumeForm, ContactForm, ProjectForm, AboutForm, LoginCodeForm, ServiceForms
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from app import app, db, secure_filename
 from app.models import *
-from app.tasks import send_email, allowed_file, get_lines_of_code
+from app.tasks import send_email, allowed_file, get_lines_of_code, add_new_user
 from PIL import Image
 from config import Config
 import os
-
 
 # Create Login Manager
 login_manager = LoginManager()
@@ -20,6 +19,8 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def login_manager(user_id):
     return User.query.get(int(user_id))
+
+
 # -------------------------TABLES---------------------------------------- #
 
 
@@ -33,12 +34,13 @@ db.create_all()
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    about = About.query.first()
     all_skills = Skills.query.all()
     all_resume_items = Resume.query.all()
+    all_services = Services.query.all()
     all_projects = Project.query.all()
     contact_form = ContactForm()
     filters = ['Web App', 'Cloud', 'Script', 'API']
-
 
     # status, lines = get_lines_of_code()
     #
@@ -54,12 +56,21 @@ def home():
                            projects=all_projects,
                            project_filters=filters,
                            form=contact_form,
-                           lines=code_lines), 200
+                           lines=code_lines,
+                           about_form=about), 200
 
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
     login_form = LoginForm()
+
+    # Check to see if a user has been created and create a user if it has not been created
+    user = User.query.all()
+    if not user:
+        add_new_user(username=os.getenv('MY_USERNAME'), password=os.getenv('MY_PASSWORD'))
+    else:
+        pass
+
     if request.method == "POST" and login_form.validate_on_submit():
         print(login_form.data)
 
@@ -107,7 +118,7 @@ def edit():
 
             flash(message=f"Successfully changed {new_skill_form.skill.data} to {new_skill_form.level.data}",
                   category="skill_change_success")
-            return redirect('/edit')
+            return redirect('/#about')
         else:
             # If the skill does not exist, add it to the database
 
@@ -118,12 +129,12 @@ def edit():
             db.session.commit()
 
             flash(message=f"Successfully Added {new_skill_form.skill.data}", category="skill_success")
-            return redirect('/edit')
+            return redirect('/#about')
 
     # -------------------------------------- Resume Form ----------------------------------------------------------
     resume = ResumeForm()
 
-    # Check if the Resume Form has been filled has is been submitted and Collect the
+    # Check if the Resume Form has been filled has been submitted and Collect the
     # details and add them to the database
     if request.method == "POST" and resume.validate_on_submit():
         print("resume")
@@ -143,7 +154,7 @@ def edit():
         flash("Successfully Added new Resume Item", category='resume')
 
         return redirect('/edit')
-    
+
     # ---------------------------------------- PORTFOLIO / PROJECTS ----------------------------------------------
     # Section for adding a new project to the website
     projects = ProjectForm()
@@ -166,7 +177,7 @@ def edit():
             flash('No file part')
             print("NO IMAGEEE")
             return redirect('/edit')
-        
+
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
         if pic.filename == '':
@@ -176,7 +187,7 @@ def edit():
 
         # If Image was Uploaded
         # Rename the filename to match the name of the project
-        
+
         if pic and allowed_file(pic.filename):
             print("Found Image")
             filename = secure_filename(pic.filename)
@@ -186,16 +197,30 @@ def edit():
 
             db.session.add(new_project)
             db.session.commit()
-        
+
             return redirect(url_for('download_file', name=filename))
-    
+
         return redirect('/edit#portfolio')
-    else: 
+    else:
         photo_url = None
-    
+
+
+    # ---------------------------------------------------- Service --------------------------------------------
+    service_form = ServiceForms()
+
+    if request.method == 'POST' and service_form.validate_on_submit():
+        new_service_item = Services(service=service_form.service.data,
+                                    description=service_form.description.data)
+
+        db.session.add(new_service_item)
+        db.session.commit()
+
+        return redirect('/services')
+
     return render_template('edit.html',
                            skillform=new_skill_form,
                            resume_form=resume,
+                           service_form=service_form,
                            project_form=projects,
                            photo_url=photo_url)
 
@@ -217,6 +242,87 @@ def edit_skill(skill_name):
     return render_template('editskills.html',
                            edit_form=skill_form,
                            item=skill.skill)
+
+
+@app.route('/services/<service>', methods=['POST', 'GET'])
+@login_required
+def edit_service(service):
+    service_edit = Services.query.filter_by(service=service)
+    service_form = ServiceForms(title=service_edit.service,
+                                subtitle=service_edit.description)
+
+    if request.method == 'POST' and service_form.validate_on_submit():
+        service_edit.service = service_form.title.data
+        service_edit.description = service_form.subtitle.data
+
+        db.session.commit()
+
+        return redirect('/#services')
+
+    return render_template('editskills.html',
+                           edit_form=service,
+                           item=service_edit.service)
+
+
+@app.route('/edit/about', methods=['GET', 'POST'])
+@login_required
+def edit_about():
+    about = About.query.first()
+    print(about)
+
+    if about:
+        about_form = AboutForm(title=about.title,
+                               description=about.description,
+                               birthday=about.birthday,
+                               Email=about.Email,
+                               freelance=about.freelance,
+                               city=about.city,
+                               country=about.country,
+                               resume_summary=about.resume,
+                               resume_title=about.resume_title)
+    else:
+        about_form = AboutForm()
+
+    print(about_form)
+
+    # except Exception:
+    #     print("here")
+    #     about_form = AboutForm()
+
+    if request.method == 'POST' and about_form.validate_on_submit():
+        about = About.query.first()
+
+        if not about:
+            about_data = About(title=about_form.title.data,
+                               description=about_form.description.data,
+                               birthday=about_form.birthday.data,
+                               Email=about_form.email.data,
+                               freelance=about_form.freelance.data,
+                               city=about_form.city.data,
+                               country=about_form.country.data,
+                               resume=about_form.resume_summary.data,
+                               resume_title=about_form.resume_title.data)
+
+            db.session.add(about_data)
+            db.session.commit()
+
+        else:
+            print(about)
+            about.title = about_form.title.data
+            about.description = about_form.description.data
+            about.birthday = about_form.birthday.data
+            about.email = about_form.email.data
+            about.freelance = about_form.freelance.data
+            about.city = about_form.city.data
+            about.country = about_form.country.data
+            about.resume = about_form.resume_summary.data
+            about.resume_title = about_form.resume_title.data
+
+            db.session.commit()
+
+        return redirect('/#about')
+
+    return render_template('editskills.html', edit_form=about_form, item="Yourself")
 
 
 @app.route('/resume/<resume_title>', methods=['GET', 'POST'])
@@ -293,6 +399,32 @@ def delete_skill(skill):
     return redirect('/#about')
 
 
+@app.route('/delete_project/<project>', methods=['GET'])
+@login_required
+def delete_project(project):
+    project_to_delete = Project.query.filter_by(title=project).first()
+
+    os.remove(f"images/{project_to_delete.image}")
+
+    db.session.delete(project_to_delete)
+    db.session.commit()
+    # After Deleleting the project it's important to delete the project image
+
+
+
+    return redirect('/#portfolio')
+
+
+@app.route('/delete_resume/<resume_item>', methods=['GET'])
+@login_required
+def delete_resume(resume_item):
+    resume_to_delete = Resume.query.filter_by(title=resume_item).first()
+    db.session.delete(resume_to_delete)
+    db.session.commit()
+
+    return redirect('/#resume')
+
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -311,9 +443,9 @@ def submit_form():
 
     print(name, email, subject, message)
     print(os.environ.get("MY_EMAIL"))
-    
+
     email_response = send_email(sender_name=name,
-                                sender_email=os.environ.get("MY_EMAIL"), 
+                                sender_email=os.environ.get("MY_EMAIL"),
                                 sender_password=os.environ.get("EMAIL_PASSWORD"),
                                 recipient_email="femiemmanuel1990@gmail.com",
                                 visitor_email=email,
@@ -322,7 +454,7 @@ def submit_form():
     # Check to see if the email was succesfully sent and return a response
     if email_response:
         return 'OK'
-    else: 
+    else:
         return 'Failed'
     # Do something with the form data here (e.g., store it in a database)
 
@@ -336,6 +468,6 @@ def show_port(project_name):
 @app.route('/uploads/<name>')
 def download_file(name):
     print(name)
-    return send_from_directory(Config.DOWNLOAD_FOLDER, 
-                               name, 
+    return send_from_directory(Config.DOWNLOAD_FOLDER,
+                               name,
                                ), 200

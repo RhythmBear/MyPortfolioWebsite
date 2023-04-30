@@ -9,16 +9,18 @@
 
         <div class="row">
             <div class="col-lg-6">
-                <h3 class="resume-title">Sumary</h3>
+                <h3 class="resume-title">Summary</h3>
 
                 <div class="resume-item pb-0">
-                    <h4>Emmanuel Adepoju</h4>
-                    <p><em>Innovative and deadline-driven Developer with 3+ years of experience of building software
-                        programs
-                        and working with Data from initial concept to final, polished deliverable.</em></p>
+                    <h4>{{about_form.resume_title}}
+                    {% if current_user.is_authenticated%}
+                    <a class="bi px-3" href="{{ url_for('edit_about') }}">  ✏️  </a>
+                    {% endif %}
+                    </h4>
+                    <p><em>{{about_form.resume}}</em></p>
                     <p>
                     <ul>
-                        <li>Ibadan, OY, NgR</li>
+                        <li>Ibadan, OY, NGR</li>
                         <li>(234) 8030-4532</li>
                         <li>femiemmanuel1990@gmail.com</li>
                     </ul>
@@ -32,10 +34,14 @@
                 {% for item in resume %}
                 {% if item.category == 'Education' %}
                 <div class="resume-item">
-                    <h4>{{ item.title }}</h4>
+                    <h4>{{ item.title }}
                     {% if current_user.is_authenticated %}
-                    <a class="bi px-3" href="{{ url_for('edit_resume', resume_title=item.title) }}"> ✏️ </a>
-                    {% endif %}
+                    <a class="bi px-3" href="{{ url_for('edit_resume', resume_title=item.title) }}"> <i class="bx bx-edit"></i> </a>
+                    <a class="bi px-3" href="{{ url_for('delete_resume', resume_item=item.title) }}"> <i class="bx bx-trash"></i> </a>
+                        {% endif %}
+
+                    </h4>
+
                     <h5>{{ item.start_month }} {{ item.start_year }} -
                         {% if item.end_month %}
                         {{ item.end_month }} {{ item.end_year }}
@@ -64,10 +70,12 @@
 
 
                 <div class="resume-item">
-                    <h4>{{ item.title }}</h4>
+                    <h4>{{ item.title }}
                     {% if current_user.is_authenticated %}
-                    <a class="bi px-3" href="{{ url_for('edit_resume', resume_title=item.title) }}"> ✏️ </a>
+                    <a class="bi px-3" href="{{ url_for('edit_resume', resume_title=item.title) }}"> <i class="bx bx-edit"></i> </a>
+                    <a class="bi px-3" href="{{ url_for('delete_resume', resume_item=item.title) }}"> <i class="bx bx-trash"></i> </a>
                     {% endif %}
+                        </h4>
                     <h5>{{ item.start_month }} {{ item.start_year }} -
                         {% if item.end_month %}
                         {{ item.end_month }} {{ item.end_year }}
@@ -91,6 +99,11 @@
 
                 {% endif %}
             </div>
+            {% if current_user.is_authenticated %}
+            <span class="col-lg-6">
+               <button type="button" class="btn btn-dark "><a href="/edit#resume">Add New Resume Item</a> </button>
+            </span>
+            {% endif %}
         </div>
 
     </div>
