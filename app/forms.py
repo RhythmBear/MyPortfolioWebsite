@@ -114,7 +114,7 @@ class ProjectForm(FlaskForm):
                         render_kw={'placeholder': "What is the Title of Your Project",
                                    'style': 'margin : 10px 0 20px'})
     category = SelectField('Category',
-                           choices=['Web App', 'Cloud', 'Script', 'API'], 
+                           choices=['Web', 'Cloud', 'Script', 'API'],
                            validators=[DataRequired()],
                            render_kw={'style': 'margin : 10px 0 20px'}) 
     client = StringField("Client", 
