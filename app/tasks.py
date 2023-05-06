@@ -18,7 +18,7 @@ def get_lines_of_code():
     except ConnectionError or ConnectTimeout:
         return False, 0
     else:
-        if response.json()['response'] == 200:
+        if response.status_code == 200:
             return True, response.json()['data']['Total lines']
         else:
             return False, 0
