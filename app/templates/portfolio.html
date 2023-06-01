@@ -24,15 +24,26 @@
         </div>
       </div>
 
-      <div class="row portfolio-container">
+      <div class="row portfolio-container mb-5">
 
+        {% if not projects %}
+        <div class="col portfolio-item filter-All">
+
+          <div class="col-lg-12">
+               <h5>This Section is Currently Undergoing Maintainance. PLease refer to <a href="https://ng.linkedin.com/in/emmanuel-adepoju-4013001b4?trk=profile-badge">My Linkedin</a> to view Projects. I apologize for the Inconvinience</h5>
+
+            </div>
+
+          </div>
+
+        {% else %}
         {% for project in projects %}
         <div class="col-lg-4 col-md-6 portfolio-item filter-{{project.category}}">
-          <div class="portfolio-wrap">
-            <img src="{{ url_for('download_file', name=project.image)}}" class="img-thumbnail" height="100" alt="">
+          <div class="portfolio-wrap lg-3 md-4 sm-4">
+            <img src="{{ url_for('download_file', name=project.image)}}" onerror="this.src='https://img.freepik.com/free-photo/project-management-planning-development-message-box-notification-graphic_53876-120467.jpg'" class="img-thumbnail" alt="Image for the Portfolio item">
             <div class="portfolio-info">
-              <h4>{{ project.title }}</h4>
-              <p>{{ project.category }}</p>
+              <h3><strong>{{ project.title }}</strong></h3>
+              <p style="color:#18d26e;"><b>{{ project.category }}</b></p>
               <div class="portfolio-links">
                 <a href="{{ url_for('show_port', project_name=project.title) }}" target="_blank" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="Portfolio Details"><i class="bx bx-link"></i></a>
 
@@ -45,6 +56,7 @@
         </div>
 
         {% endfor %}
+        {% endif %}
 
 
 
