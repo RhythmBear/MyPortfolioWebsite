@@ -42,13 +42,13 @@ def home():
     contact_form = ContactForm()
     filters = ['Web', 'Cloud', 'Script', 'API']
 
-    status, lines = get_lines_of_code()
-
-    if status:
-        code_lines = lines
-    else:
-        code_lines = 897223
-    # code_lines = 897223
+    # status, lines = get_lines_of_code()
+    #
+    # if status:
+    #     code_lines = lines
+    # else:
+    #     code_lines = 897223
+    code_lines = 897223
 
     return render_template("index.html",
                            skills=all_skills,
