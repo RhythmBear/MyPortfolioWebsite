@@ -88,8 +88,8 @@
                     </p>
                     {% if current_user.is_authenticated %}
               <div class="portfolio-links mt-5 mb-0">
-                 <a class="mx-5" href="{{ url_for('delete_project', project=project.title)}}"  >Delete<i class=" bx bx-trash"></i></a>
-                <a class="mx-5" href="{{ url_for('edit_portfolio', portfolio=project.title)}}"  >Edit<i class=" bx bx-edit"></i></a>
+                 <a class="mx-5" href="{{ url_for('delete_project', project=project.title)}}" target="_blank" >Delete<i class=" bx bx-trash"></i></a>
+                <a class="mx-5" href="{{ url_for('edit_portfolio', portfolio=project.title)}}" target="_blank" >Edit<i class=" bx bx-edit"></i></a>
 
               </div>
               {% endif %}
