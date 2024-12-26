@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 import config
 import os
 
+load_dotenv()
+
 # Create Flask app
 app = Flask(__name__)
 Bootstrap(app)
