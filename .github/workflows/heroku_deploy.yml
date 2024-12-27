@@ -24,6 +24,6 @@ jobs:
         context: .
         dockerfile_directory: ./
         dockerfile_name: Dockerfile
-        docker_options: "no_cache"
+        docker_options: "-p 8000"
 
         process_type: web
