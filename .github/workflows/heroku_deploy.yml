@@ -34,8 +34,11 @@ jobs:
         heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
         dockerfile_directory: ./
         dockerfile_name: Dockerfile
-        docker_options: "--build-arg SECRET_KEY=${{ secrets.SECRET_KEY }} --build-arg MY_USERNAME=${{ secrets.MY_USERNAME }}"
-          # --build-arg SECRET_KEY=${{ secrets.SECRET_KEY }} \
+        docker_options: >
+          --build-arg SECRET_KEY=${{ secrets.SECRET_KEY }} 
+          --build-arg MY_USERNAME=${{ secrets.MY_USERNAME }}
+          
+        # --build-arg SECRET_KEY=${{ secrets.SECRET_KEY }} \
           # --build-arg MY_USERNAME=${{ secrets.MY_USERNAME }} \
           # --build-arg MY_PASSWORD=${{ secrets.MY_PASSWORD }} \
           # --build-arg PROD_DB_HOST=${{ secrets.PROD_DB_HOST }} \
