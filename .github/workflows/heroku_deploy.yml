@@ -44,5 +44,6 @@ jobs:
           --build-arg PROD_DB_USER=${{ secrets.PROD_DB_USER }} 
           --build-arg PROD_DB_PW=${{ secrets.PROD_DB_PW }}
           --build-arg PROD_DB_NAME=${{ secrets.PROD_DB_NAME }}
+          --network host
 
         process_type: web
