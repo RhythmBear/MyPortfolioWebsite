@@ -32,7 +32,6 @@ jobs:
         email: ${{ secrets.HEROKU_EMAIL }}
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-        context: .
         dockerfile_directory: ./
         dockerfile_name: Dockerfile
         docker_options: |
@@ -42,6 +41,6 @@ jobs:
           --build-arg PROD_DB_HOST=${{ secrets.PROD_DB_HOST }} \
           --build-arg PROD_DB_USER=${{ secrets.PROD_DB_USER }} \
           --build-arg PROD_DB_PW=${{ secrets.PROD_DB_PW }} \
-          --build-arg PROD_DB_NAME=${{ secrets.PROD_DB_NAME }} 
+          --build-arg PROD_DB_NAME=${{ secrets.PROD_DB_NAME }} .
 
         process_type: web
