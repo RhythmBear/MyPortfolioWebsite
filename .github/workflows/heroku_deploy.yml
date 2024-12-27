@@ -1,0 +1,29 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches: main
+
+# Defining Workflow
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    # Checkout Repository.
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # This is where i build and push the docker image to heroku
+    - name: Build, Push and release a docker container to Heroku
+      uses: gonuit/heroku-docker-deploy@v1.3.3.
+      with:
+      # Defining all the secrets and ensure that they are set in the Github repository
+        email: ${{ secrets.HEROKU_EMAIL }}
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+
+        dockerfile_directoryL: ./
+        dockerfile_name: Dockerfile
+        docker_optionsL: "no_cache"
+
+        process_type: web
