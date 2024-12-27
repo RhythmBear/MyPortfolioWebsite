@@ -1,6 +1,8 @@
 from app import app, db
+import os
 
 if __name__ == "__main__":
     db.create_all()
-    app.run(port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    app.run(port=port)
 
