@@ -42,12 +42,6 @@ def home():
     contact_form = ContactForm()
     filters = ['Web', 'Cloud', 'Script', 'API']
 
-    status, lines = get_lines_of_code()
-
-    if status:
-        code_lines = lines
-    else:
-        code_lines = 897223
 
     return render_template("index.html",
                            skills=all_skills,
@@ -55,7 +49,7 @@ def home():
                            projects=all_projects,
                            project_filters=filters,
                            form=contact_form,
-                           lines=code_lines,
+                           years=2,
                            about_form=about), 200
 
 
@@ -470,3 +464,13 @@ def download_file(name):
     return send_from_directory(Config.DOWNLOAD_FOLDER,
                                name,
                                ), 200
+
+
+# ______________________________________ DEFINE ERROR HANDLERS _____________________________________#
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500

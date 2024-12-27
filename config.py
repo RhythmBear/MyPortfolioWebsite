@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 # Load Environment variables
-load_dotenv()
+load_dotenv(override=True)
 
 # Find the absolute file path to the top level directory
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -52,5 +52,7 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
+    PROPAGATE_EXCEPTIONS = True
+    DEBUG = False
     FLASK_ENV = 'production'
-    SQLALCHEMY_DATABASE_URI = os.getenv('PROD_DATABASE_URL', default="sqlite:///" + os.path.join(basedir, 'app/portfolio.db'))
+    SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{os.getenv('PROD_DB_USER')}:{os.getenv('PROD_DB_PW')}@{os.getenv('PROD_DB_HOST')}/{os.getenv('PROD_DB_NAME')}"
