@@ -14,6 +14,6 @@ RUN pip install -r requirements.txt
 COPY . /app
 
 # configure the container to run in an executed manner
-ENTRYPOINT [ "python" ]
+EXPOSE 8000 
 
-CMD ["main.py"]
+CMD ["gunicorn", "--config", "gunicorn_config.py", "app:app"]

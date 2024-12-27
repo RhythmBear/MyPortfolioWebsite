@@ -52,6 +52,7 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
+    PROPAGATE_EXCEPTIONS = True
     DEBUG = False
     FLASK_ENV = 'production'
     SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{os.getenv('PROD_DB_USER')}:{os.getenv('PROD_DB_PW')}@{os.getenv('PROD_DB_HOST')}/{os.getenv('PROD_DB_NAME')}"
