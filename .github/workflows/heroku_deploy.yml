@@ -24,6 +24,6 @@ jobs:
         context: .
         dockerfile_directory: ./
         dockerfile_name: Dockerfile
-        docker_options: "-p 8000"
+        docker_options: "--tag rhythmbearwebsite:latest"
 
         process_type: web
