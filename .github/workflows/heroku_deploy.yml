@@ -13,6 +13,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Install Heroku CLI
+      run: |
+        curl https://cli-assets.heroku.com/install.sh | sh
+
     # This is where i build and push the docker image to heroku
     - name: Build, Push and release a docker container to Heroku
       uses: gonuit/heroku-docker-deploy@v1.3.3
