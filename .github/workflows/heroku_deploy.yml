@@ -35,6 +35,12 @@ jobs:
         context: .
         dockerfile_directory: ./
         dockerfile_name: Dockerfile
-        docker_options: ""
+        docker_options: "--build-arg SECRET_KEY=${{ secrets.SECRET_KEY }} \
+                        --build-arg MY_USERNAME=${{ secrets.MY_USERNAME }} \
+                        --build-arg MY_PASSWORD=${{ secrets.MY_PASSWORD }} \
+                        --build-arg PROD_DB_HOST=${{ secrets.PROD_DB_HOST }} \
+                        --build-arg PROD_DB_USER=${{ secrets.PROD_DB_USER }} \
+                        --build-arg PROD_DB_PW=${{ secrets.PROD_DB_PW }} \
+                        --build-arg PROD_DB_NAME=${{ secrets.PROD_DB_NAME }} \"
 
         process_type: web
