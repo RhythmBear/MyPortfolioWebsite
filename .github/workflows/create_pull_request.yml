@@ -25,5 +25,6 @@ on:
               commit-message: Automated pull request
               title: Automated pull request
               body: Pull Request to merge code into main for production
-              branch: main
-              base: PW-local
+              head: PW-local
+              base: main
+              branch: dev-to-main-pr
