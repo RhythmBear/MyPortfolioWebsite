@@ -4,5 +4,5 @@ import os
 if __name__ == "__main__":
     db.create_all()
     port = int(os.environ.get("PORT", 8000))
-    app.run(port=port)
-
+    app.run(debug=True, port=port)
+d

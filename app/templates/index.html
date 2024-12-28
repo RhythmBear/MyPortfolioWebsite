@@ -27,6 +27,11 @@
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;700&family=Ubuntu&display=swap"
           rel="stylesheet">
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Electrolize&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <!-- Added Adobe Fonts -->
+    <link rel="stylesheet" href="https://use.typekit.net/xid6oaa.css">
 
     <!-- Vendor CSS Files -->
     <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }} " rel="stylesheet">
@@ -71,7 +76,7 @@
         <h1><a href="">Emmanuel Adepoju</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!--      <a href="index.html" class="mr-auto"><img src="{{ url_for('static', filename='assets/img/favicon-me.png" alt="') }} " class="img-fluid"></a>-->
-        <h2>I'm a <span>Data Engineer</span> from Nigeria</h2>
+        <h2 id="highlight">I'm a <span id="spelling-out" class="spelling-out"></span> from Nigeria</h2>
 
         <nav class="navbar" id="navbar">
             <ul>
@@ -115,6 +120,31 @@
 {% include 'portfolio.html' %}
 {% include 'contact.html' %}
 
+<script>
+    const words = ["Data Engineer"];
+    let currentWordIndex = 0;
+    const element = document.getElementById("spelling-out");
+    let charIndex = 0;
+
+    function spellOutWord() {
+      const word = words[currentWordIndex];
+
+      if (charIndex < word.length) {
+        element.textContent += word[charIndex];
+        charIndex++;
+        setTimeout(spellOutWord, 200); // Adjust speed as needed
+      } else {
+        setTimeout(() => {
+          element.textContent = ""; // Clear the word
+          charIndex = 0; // Reset character index
+          currentWordIndex = (currentWordIndex + 1) % words.length; // Switch to the next word
+          spellOutWord(); // Restart the animation with the next word
+        }, 1000); // Delay before switching words
+      }
+    }
+
+    spellOutWord(); // Start the spelling-out animation
+  </script>
 
 <!--<div class="credits">-->
 <!--    &lt;!&ndash; All the links in the footer should remain intact. &ndash;&gt;-->
