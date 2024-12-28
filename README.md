@@ -8,6 +8,8 @@ This portfolio website is a showcase of my skills, projects, and experiences. Bu
 - Contact form with email functionality.
 - Mobile-first responsive design.
 - Secure authentication for admin management for updating the contents of the webiste.
+- Deployed On Heroku through Github Actions CI/CD
+
 
 ---
 
