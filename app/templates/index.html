@@ -47,6 +47,7 @@
     <!-- Link to the CSS file -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/edit_styles.css') }}">
 
+
     {% endblock %}
     {% endblock %}
     <!-- =======================================================
@@ -56,6 +57,7 @@
     * License: https://bootstrapmade.com/license/
     ======================================================== -->
 </head>
+
 
 
 <body>
@@ -101,8 +103,11 @@
 
         </div>
 
-
-
+        <span class="col-lg-6">
+            <button type="button" class="btn btn-dark "><a href="{{ url_for('/#about') }}">Learn More
+            </a> </button>
+         </span>
+        
 
     </div>
 </header><!-- End Header -->
