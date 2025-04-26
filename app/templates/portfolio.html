@@ -41,7 +41,7 @@
         <div class="col-lg-3 col-md-3 portfolio-item filter-{{project.category}}">
           <div class="portfolio-wrap lg-3 md-4 sm-4">
 
-            <img src="{{ url_for('download_file', name=project.image)}}" onerror="this.src='https://img.freepik.com/free-photo/project-management-planning-development-message-box-notification-graphic_53876-120467.jpg'" class="img-thumbnail" alt="Image for the Portfolio item">
+            <img src="{{ project.image }}" onerror="this.src='https://img.freepik.com/free-photo/project-management-planning-development-message-box-notification-graphic_53876-120467.jpg'" class="img-thumbnail" alt="Image for the Portfolio item">
             <p><strong>{{ project.title }}</strong></p>
             <div class="portfolio-info">
               <h3><strong>{{ project.title }}</strong></h3>
