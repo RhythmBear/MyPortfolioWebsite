@@ -1,5 +1,5 @@
 from flask import Flask, Response, render_template, redirect, url_for, flash, request, send_from_directory
-from datetime import date
+from datetime import date, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, SkillForm, ResumeForm, ContactForm, ProjectForm, AboutForm, LoginCodeForm, ServiceForms
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
@@ -40,7 +40,7 @@ def home():
     all_services = Services.query.all()
     all_projects = Project.query.all()
     contact_form = ContactForm()
-    filters = ['Web', 'Cloud', 'Script', 'API']
+    filters = ['Web', 'Data', 'Automation', "AI"]
 
 
     return render_template("index.html",
@@ -49,7 +49,7 @@ def home():
                            projects=all_projects,
                            project_filters=filters,
                            form=contact_form,
-                           years=2,
+                           years=datetime.today().year - date(2022, 6, 1).year,
                            about_form=about), 200
 
 
@@ -154,8 +154,8 @@ def edit():
 
     if request.method == "POST" and projects.validate_on_submit():
         print(projects.data.values())
-        pic = request.files['image']
-        new_filename = projects.title.data.replace(' ', '_') + '.' + pic.filename.split('.')[-1]
+        # pic = request.files['image']
+        # new_filename = projects.title.data.replace(' ', '_') + '.' + pic.filename.split('.')[-1]
         new_project = Project(title=projects.title.data,
                               category=projects.category.data,
                               client=projects.client.data,
@@ -163,37 +163,37 @@ def edit():
                               end_date=projects.end_date.data,
                               url=projects.url.data,
                               description=projects.description.data,
-                              image=new_filename)
+                              image=projects.image.data)
 
-        # new_photo = photos.save(projects.images.data)
-        if 'image' not in request.files:
-            flash('No file part')
-            print("NO IMAGEEE")
-            return redirect('/edit')
+        # # new_photo = photos.save(projects.images.data)
+        # if 'image' not in request.files:
+        #     flash('No file part')
+        #     print("NO IMAGEEE")
+        #     return redirect('/edit')
 
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if pic.filename == '':
-            flash('No selected file')
-            print("No image at alllll")
-            return redirect(request.url)
+        # # If the user does not select a file, the browser submits an
+        # # empty file without a filename.
+        # if pic.filename == '':
+        #     flash('No selected file')
+        #     print("No image at alllll")
+        #     return redirect(request.url)
 
-        # If Image was Uploaded
-        # Rename the filename to match the name of the project
+        # # If Image was Uploaded
+        # # Rename the filename to match the name of the project
 
-        if pic and allowed_file(pic.filename):
-            print("Found Image")
-            filename = secure_filename(pic.filename)
-            pic.save(os.path.join(Config.UPLOAD_FOLDER, filename))
-            os.rename(f'images/{filename}', f'images/{new_filename}')
-            filename = new_filename
+        # if pic and allowed_file(pic.filename):
+        #     print("Found Image")
+        #     filename = secure_filename(pic.filename)
+        #     pic.save(os.path.join(Config.UPLOAD_FOLDER, filename))
+        #     os.rename(f'images/{filename}', f'images/{new_filename}')
+        #     filename = new_filename
 
-            db.session.add(new_project)
-            db.session.commit()
+        db.session.add(new_project)
+        db.session.commit()
 
-            return redirect(url_for('download_file', name=filename))
+        # return redirect(url_for('download_file', name=filename))
 
-        return redirect('/edit#portfolio')
+        return redirect('/edit')
     else:
         photo_url = None
 
@@ -362,7 +362,8 @@ def edit_portfolio(portfolio):
                                  start_date=portfolio_edit.start_date,
                                  end_date=portfolio_edit.end_date,
                                  url=portfolio_edit.url,
-                                 description=portfolio_edit.description
+                                 description=portfolio_edit.description,
+                                 image=portfolio_edit.image
                                  )
 
     if request.method == 'POST' and portfolio_form.validate_on_submit():
@@ -372,6 +373,8 @@ def edit_portfolio(portfolio):
         portfolio_edit.start_date = portfolio_form.start_date.data
         portfolio_edit.end_date = portfolio_form.end_date.data
         portfolio_edit.url = portfolio_form.url.data
+        portfolio_edit.description = portfolio_form.description.data
+        portfolio_edit.image = portfolio_form.image.data
 
         db.session.commit()
 

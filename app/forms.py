@@ -114,7 +114,7 @@ class ProjectForm(FlaskForm):
                         render_kw={'placeholder': "What is the Title of Your Project",
                                    'style': 'margin : 10px 0 20px'})
     category = SelectField('Category',
-                           choices=['Web', 'Cloud', 'Script', 'API'],
+                           choices=['Web', 'Data', 'Automation', "AI"],
                            validators=[DataRequired()],
                            render_kw={'style': 'margin : 10px 0 20px'}) 
     client = StringField("Client", 
@@ -136,9 +136,12 @@ class ProjectForm(FlaskForm):
     description = MdeField(validators=[
             DataRequired("Input required"),
             Length(min=15, max=30000)])
-    image = FileField(u'image',
-                      render_kw={'style': 'margin : 10px 0 20px'
-                                       })
+    
+    # Update URL Field to recieve Image URL instead of file
+    image = StringField('Image', 
+                      validators=[DataRequired(), URL()],
+                      render_kw={'placeholder': "Link to Image for Project?",
+                                   'style': 'margin : 10px 0 20px'})
     
     submit = SubmitField('Add Project', render_kw={'style': 'margin : 10px 0 20px'})
 
